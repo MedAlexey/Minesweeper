@@ -6,6 +6,8 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
+import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS;
+
 public class MainFrame extends JFrame {
 
 
@@ -42,15 +44,13 @@ public class MainFrame extends JFrame {
 
         JPanel field = new PlayingField();           //игровое поле
         field.setBorder(new BevelBorder(BevelBorder.LOWERED));
-        getContentPane().add(field);
+        getContentPane().add(field, BorderLayout.CENTER);
 
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setBackground(new Color(238,238,238,255)/*Color.lightGray*/);
-        setSize(Settings.getCellsInWidth()*40 + 43,(Settings.getCellsInHeight() +1)*37 + 50); //нужно пересмотреть вывсоту окна
+        setBackground(new Color(238,238,238,255));
+        setSize(Settings.getCellsInWidth()*40 + 43,(Settings.getCellsInHeight())*35 + 100);
         setLocationRelativeTo(null);
     }
 
 }
-
-

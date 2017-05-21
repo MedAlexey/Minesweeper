@@ -12,7 +12,10 @@ public class Settings extends JFrame {
     private JTextField usersCellsInHeight;  //поле для ввода ячеек в высоту
     private JTextField usersCellsInWidth;    //поле для ввода ячеек в ширину
     private JTextField usersNumberOfMines;   //поля для ввода кол-ва мин
-    private static int mustBeOpen = cellsInHeight*cellsInWidth - numbOfMines;
+    private static int mustBeOpen = cellsInHeight * cellsInWidth - numbOfMines;
+    private int screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
+    private int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height -
+            Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration()).bottom;
 
     public Settings() {
         super("Settings");
@@ -20,21 +23,21 @@ public class Settings extends JFrame {
 
         Box box1 = Box.createHorizontalBox();
         JLabel cellsInWidth = new JLabel("Ячеек в ширину:");
-        usersCellsInWidth = new JTextField("5",15);
+        usersCellsInWidth = new JTextField("" + getCellsInWidth(), 15);
         box1.add(cellsInWidth);
         box1.add(Box.createHorizontalStrut(6));
         box1.add(usersCellsInWidth);
 // Настраиваем вторую горизонтальную панель
         Box box2 = Box.createHorizontalBox();
-        JLabel cellsInHeight = new JLabel("Ячеек в длину:");
-        usersCellsInHeight = new JTextField("5",15);
+        JLabel cellsInHeight = new JLabel("Ячеек в высоту:");
+        usersCellsInHeight = new JTextField("" + getCellsInHeight(), 15);
         box2.add(cellsInHeight);
         box2.add(Box.createHorizontalStrut(6));
         box2.add(usersCellsInHeight);
 //Панель с вводом кол-ва мин
         Box box3 = Box.createHorizontalBox();
         JLabel numbOfMines = new JLabel("Колличество мин:");
-        usersNumberOfMines = new JTextField("5",15);
+        usersNumberOfMines = new JTextField("" + getNumbOfMines(), 15);
         box3.add(numbOfMines);
         box3.add(Box.createHorizontalStrut(6));
         box3.add(usersNumberOfMines);
@@ -58,7 +61,6 @@ public class Settings extends JFrame {
         mainBox.add(box3);
         mainBox.add(Box.createVerticalStrut(12));
         mainBox.add(box4);
-        mainBox.add(Box.createVerticalStrut(12));
         setContentPane(mainBox);
         pack();
         setResizable(false);
@@ -77,19 +79,30 @@ public class Settings extends JFrame {
         return numbOfMines;
     }
 
-    public static int getMustBeOpen(){ return mustBeOpen;}
+    public static int getMustBeOpen() {
+        return mustBeOpen;
+    }
 
 
     class OkListener implements MouseListener {                 //листнер кнопки "ок"
 
         public void mouseClicked(MouseEvent event) {
-            cellsInWidth = new Settings().setElement(usersCellsInWidth.getText());
-            cellsInHeight = new Settings().setElement(usersCellsInHeight.getText());
-            numbOfMines = new Settings().setElement(usersNumberOfMines.getText());
-            mustBeOpen = cellsInHeight * cellsInWidth - numbOfMines;
-            new Main().newGame();
-            setVisible(false);
-            dispose();
+            int tmpCellsInWidth = new Settings().setElement(usersCellsInWidth.getText());
+            int tmpCellsInHeight = new Settings().setElement(usersCellsInHeight.getText());
+            int tmpNumbOfMines = new Settings().setElement(usersNumberOfMines.getText());
+            if (tmpCellsInHeight == 0 || tmpCellsInWidth == 0 || tmpNumbOfMines == 0)
+                ShowErrorMessage();
+            else if(tmpNumbOfMines >= tmpCellsInHeight*tmpCellsInWidth -5 || tmpCellsInHeight*35 + 100 > screenHeight || tmpCellsInWidth*40 + 43 > screenWidth)
+                ShowInformationMessage();
+            else {
+                cellsInHeight = tmpCellsInHeight;
+                cellsInWidth = tmpCellsInWidth;
+                numbOfMines = tmpNumbOfMines;
+                mustBeOpen = cellsInHeight * cellsInWidth - numbOfMines;
+                new Main().newGame();
+                setVisible(false);
+                dispose();
+            }
         }
 
         public void mouseEntered(MouseEvent event) {
@@ -138,24 +151,19 @@ public class Settings extends JFrame {
     }
 
     private int setElement(String line) {
-        int temp;
 
         if (!line.equals("")) {
-            temp = new Settings().textHandler(line);
-            if (temp == 0) {
-                new Settings().ShowErrorMessage();
-                return 5;
-            }
-            else {
-                return temp;
-            }
+            return new Settings().textHandler(line);
         } else {
-            new Settings().ShowErrorMessage();
-            return 5;
+            return 0;
         }
     }
 
     private void ShowErrorMessage() {         //диалоговое окно с ошибкой
-        JOptionPane.showMessageDialog(null, "Неправильный формат ввода", "Error", JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(null, "Неправильный формат", "Error", JOptionPane.WARNING_MESSAGE);
+    }
+
+    private void ShowInformationMessage() {
+        JOptionPane.showMessageDialog(null, "Недопустимый размер", "Error", JOptionPane.WARNING_MESSAGE);
     }
 }
