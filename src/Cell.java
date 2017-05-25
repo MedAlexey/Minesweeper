@@ -12,10 +12,6 @@ public class Cell {
     private boolean question;
     private boolean mine;
     private boolean isOpen;
-    private int minesBeside;
-    private Color color;
-    private final Color openCell = new Color(0, 0, 0, 0);
-    private final Color closeCell = new Color(121, 121, 121, 255);
 
     private Cell eastBrother;
     private Cell southeastBrother;
@@ -38,9 +34,7 @@ public class Cell {
         this.flag = false;
         this.question = false;
         this.mine = false;
-        this.minesBeside = 0;
         this.isOpen = false;
-        this.color = closeCell;
 
         this.eastBrother = null;
         this.southeastBrother = null;
@@ -53,19 +47,6 @@ public class Cell {
 
     }
 
-    public void howMinesBeside() {       //сколько мин вокруг клетки
-        if (this.westBrother != null && this.westBrother.getMine()) this.minesBeside++;
-        if (this.southwesternBrother != null && this.southwesternBrother.getMine()) this.minesBeside++;
-        if (this.southeastBrother != null && this.southeastBrother.getMine()) this.minesBeside++;
-        if (this.eastBrother != null && this.eastBrother.getMine()) this.minesBeside++;
-        if (this.northeasternBrother != null && this.northeasternBrother.getMine()) this.minesBeside++;
-        if (this.northwesternBrother != null && this.northwesternBrother.getMine()) this.minesBeside++;
-    }
-
-    public void open() {
-        this.isOpen = true;
-        this.color = openCell;
-    }
 
     public Cell addEastBrother(Cell cell) {
         Cell brother = new Cell(new Point(cell.xpoints[0] + 40, cell.ypoints[0]));
@@ -119,16 +100,28 @@ public class Cell {
     }
 
     public int getMinesBeside() {
+        int minesBeside = 0;
+        if (this.westBrother != null && this.westBrother.getMine()) minesBeside++;
+        if (this.southwesternBrother != null && this.southwesternBrother.getMine()) minesBeside++;
+        if (this.southeastBrother != null && this.southeastBrother.getMine()) minesBeside++;
+        if (this.eastBrother != null && this.eastBrother.getMine()) minesBeside++;
+        if (this.northeasternBrother != null && this.northeasternBrother.getMine()) minesBeside++;
+        if (this.northwesternBrother != null && this.northwesternBrother.getMine()) minesBeside++;
         return minesBeside;
     }
 
     public Color getColor() {
-        return color;
+        if (this.isOpen) return new Color(0, 0, 0, 0);
+        else return new Color(121, 121, 121, 255);
     }
 
     /**
      * сеттеры
      */
+    public void setIsOpen(boolean condition){
+        this.isOpen = condition;
+    }
+
     public void setEastBrother(Cell brother) {
         eastBrother = brother;
     }

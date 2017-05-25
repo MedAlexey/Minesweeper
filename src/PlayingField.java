@@ -26,8 +26,12 @@ public class PlayingField extends JPanel {
     private Image fourImg;
     private Image fiveImg;
     private Image sixImg;
-    private final int imgWidth = 20;
-    private final int imgHeight = 20;
+    private final int IMG_WIDTH = 20;
+    private final int IMG_HEIGHT = 20;
+
+    private final int IMAGE_DISPLACEMENT = 12;
+    private final int X_DISPLACEMENT = 20;
+    private final int Y_DISPLACEMENT = 35;
 
 
     public PlayingField() {
@@ -37,11 +41,11 @@ public class PlayingField extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 if (e.getButton() == MouseEvent.BUTTON1) {
-                    Button1Pressed(e.getX(), e.getY());
+                    button1Pressed(e.getX(), e.getY());
                 }
 
                 if (e.getButton() == MouseEvent.BUTTON3) {
-                    Button3Pressed(e.getX(), e.getY());
+                    button3Pressed(e.getX(), e.getY());
                 }
             }
         });
@@ -71,46 +75,46 @@ public class PlayingField extends JPanel {
         Point startPoint = new Point(22, -18);            //точка начала заполнения строки
         Cell cell;
         int totalHeight = 1;          // высота поля в конкретный момент
-        while (totalHeight <= Settings.getCellsInHeight()) {
+        while (totalHeight <= SettingsFrame.getCellsInHeight()) {
             if (totalHeight % 2 != 0) {                      //нечётный ярус
-                startPoint.x = startPoint.x - 20;
-                startPoint.y = startPoint.y + 35;
+                startPoint.x -= X_DISPLACEMENT;
+                startPoint.y += Y_DISPLACEMENT;
                 cell = new Cell(startPoint);
                 if (totalHeight != 1) {
-                    cell.setNortheasternBrother(result.get(result.size() - 1 - Settings.getCellsInWidth() + 1));
-                    result.get(result.size() - 1 - Settings.getCellsInWidth() + 1).setSouthwesternBrother(cell);
+                    cell.setNortheasternBrother(result.get(result.size() - SettingsFrame.getCellsInWidth()));
+                    result.get(result.size() - 1 - SettingsFrame.getCellsInWidth() + 1).setSouthwesternBrother(cell);
                 }
                 result.add(cell);
-                for (int j = 1; j < Settings.getCellsInWidth(); j++) {
+                for (int j = 1; j < SettingsFrame.getCellsInWidth(); j++) {
                     cell = cell.addEastBrother(cell);
                     result.get(result.size() - 1).setEastBrother(cell);
                     cell.setWestBrother(result.get(result.size() - 1));
                     if (totalHeight != 1) {
-                        cell.setNorthwesternBrother(result.get(result.size() - 1 - Settings.getCellsInWidth()));
-                        result.get(result.size() - 1 - Settings.getCellsInWidth()).setSoutheastBrother(cell);
-                        cell.setNortheasternBrother(result.get(result.size() - 1 - Settings.getCellsInWidth() + 1));
-                        result.get(result.size() - 1 - Settings.getCellsInWidth() + 1).setSouthwesternBrother(cell);
+                        cell.setNorthwesternBrother(result.get(result.size() - 1 - SettingsFrame.getCellsInWidth()));
+                        result.get(result.size() - 1 - SettingsFrame.getCellsInWidth()).setSoutheastBrother(cell);
+                        cell.setNortheasternBrother(result.get(result.size() - SettingsFrame.getCellsInWidth()));
+                        result.get(result.size() - SettingsFrame.getCellsInWidth()).setSouthwesternBrother(cell);
                     }
                     result.add(cell);
                 }
             } else {                           //чётный ярус клеток
-                startPoint.x += 20;
-                startPoint.y += 35;
+                startPoint.x += X_DISPLACEMENT;
+                startPoint.y += Y_DISPLACEMENT;
                 cell = new Cell(startPoint);
-                cell.setNorthwesternBrother(result.get(result.size() - 1 + 1 - Settings.getCellsInWidth()));
-                result.get(result.size() - 1 - Settings.getCellsInWidth() + 1).setSoutheastBrother(cell);
-                cell.setNortheasternBrother(result.get(result.size() - 1 - Settings.getCellsInWidth() + 2));
-                result.get(result.size() - 1 - Settings.getCellsInWidth() + 2).setSouthwesternBrother(cell);
+                cell.setNorthwesternBrother(result.get(result.size() - SettingsFrame.getCellsInWidth()));
+                result.get(result.size() - SettingsFrame.getCellsInWidth()).setSoutheastBrother(cell);
+                cell.setNortheasternBrother(result.get(result.size() - SettingsFrame.getCellsInWidth() + 1));
+                result.get(result.size() - SettingsFrame.getCellsInWidth() + 1).setSouthwesternBrother(cell);
                 result.add(cell);
-                for (int j = 1; j < Settings.getCellsInWidth(); j++) {
+                for (int j = 1; j < SettingsFrame.getCellsInWidth(); j++) {
                     cell = cell.addEastBrother(cell);
                     result.get(result.size() - 1).setEastBrother(cell);
                     cell.setWestBrother(result.get(result.size() - 1));
-                    cell.setNorthwesternBrother(result.get(result.size() - 1 - Settings.getCellsInWidth() + 1));
-                    result.get(result.size() - 1 - Settings.getCellsInWidth() + 1).setSoutheastBrother(cell);
-                    if (j != Settings.getCellsInWidth() - 1) {
-                        cell.setNortheasternBrother(result.get(result.size() - 1 - Settings.getCellsInWidth() + 2));
-                        result.get(result.size() - 1 - Settings.getCellsInWidth() + 2).setSouthwesternBrother(cell);
+                    cell.setNorthwesternBrother(result.get(result.size() - SettingsFrame.getCellsInWidth()));
+                    result.get(result.size() - SettingsFrame.getCellsInWidth()).setSoutheastBrother(cell);
+                    if (j != SettingsFrame.getCellsInWidth() - 1) {
+                        cell.setNortheasternBrother(result.get(result.size() - SettingsFrame.getCellsInWidth() + 1));
+                        result.get(result.size() - SettingsFrame.getCellsInWidth() + 1).setSouthwesternBrother(cell);
                     }
                     result.add(cell);
                 }
@@ -123,17 +127,13 @@ public class PlayingField extends JPanel {
 
     private void mining() {         //минирование поля
         int totalMines = 0;
-        while (totalMines < Settings.getNumbOfMines()) {
+        while (totalMines < SettingsFrame.getNumbOfMines()) {
             Random random = new Random();
-            int num = random.nextInt(Settings.getCellsInHeight() * Settings.getCellsInWidth() - 1);
+            int num = random.nextInt(SettingsFrame.getCellsInHeight() * SettingsFrame.getCellsInWidth() - 1);
             if (!cells.get(num).getMine() && !cells.get(num).getIsOpen()) {
                 cells.get(num).setMine(true);
                 totalMines++;
             }
-        }
-
-        for (Cell cell: cells){
-            cell.howMinesBeside();
         }
     }
 
@@ -143,13 +143,13 @@ public class PlayingField extends JPanel {
             if (JOptionPane.OK_OPTION == 0) new Main().newGame();
         }
 
-        if (totalOpenCells == Settings.getMustBeOpen()) {
+        if (totalOpenCells == SettingsFrame.getMustBeOpen()) {
             JOptionPane.showMessageDialog(null, "<html><H2>Вы победили</H2>", "Greeting",JOptionPane.PLAIN_MESSAGE);
             if (JOptionPane.OK_OPTION == 0) new Main().newGame();
         }
     }
 
-    private void Button3Pressed(int x, int y) {     //правая кнопка нажата
+    private void button3Pressed(int x, int y) {     //правая кнопка нажата
         for (Cell cell : cells) {
             if (cell.getPoly().contains(x, y)) {
                 if (!cell.getFlag() && !cell.getQuestion()) cell.setFlag(true);
@@ -165,24 +165,23 @@ public class PlayingField extends JPanel {
     }
 
 
-    private void Button1Pressed(int x, int y) {           //левая кнопка нажата
+    private void button1Pressed(int x, int y) {           //левая кнопка нажата
         for (Cell cell : cells) {
             if (cell.getPoly().contains(x, y) && !cell.getIsOpen()) {
                 totalOpenCells++;
-                cell.open();
+                cell.setIsOpen(true);
                 if (firstDepression) {     //если первое нажатие
                     firstDepression = false;
                     mining();
                     repaint();
                 }
                 if (cell.getMinesBeside() == 0) {
-                    queue.add(cell);
-                    openBrothers();
+                    openBrothers(cell);
                 }
                 if (cell.getMine()) {                        // открытие всех мин при проигрыше
                     for (int i = 0; i < cells.size() - 1; i++) {
                         if (cells.get(i).getMine()) {
-                            cells.get(i).open();
+                            cells.get(i).setIsOpen(true);
                         }
                     }
                     gameFailed = true;
@@ -193,20 +192,27 @@ public class PlayingField extends JPanel {
         dialogs();
     }
 
-    private void openBrothers(){
+    private void openBrothers(Cell cell){
+        queue.add(cell);
        while (!queue.isEmpty()){
-           Cell cell = queue.removeFirst();
-           if (!cell.getIsOpen()) {
-               cell.open();
+           Cell newCell = queue.removeFirst();
+           if (!newCell.getIsOpen()) {
+               newCell.setIsOpen(true);
                totalOpenCells++;
            }
-           if(cell.getMinesBeside() == 0){
-               for (Cell brother: cell.getClosedBrothers()){
+           if(newCell.getMinesBeside() == 0){
+               for (Cell brother: newCell.getClosedBrothers()){
                    queue.addFirst(brother);
                }
            }
        }
     }
+
+    @Override
+    public Dimension getSize(){
+        return new Dimension(SettingsFrame.getCellsInWidth()*40,(SettingsFrame.getCellsInHeight())*35 + 15);
+    }
+
 
     @Override
     public void paintComponent(Graphics g) {
@@ -219,24 +225,26 @@ public class PlayingField extends JPanel {
             g.drawPolygon(cell.getPoly());
 
             if (cell.getIsOpen() && !cell.getMine()) {
-                if (cell.getMinesBeside() == 1) g.drawImage(oneImg, cell.getXpoints()[0] + 12, cell.getYpoints()[0], imgWidth, imgHeight, null);
+                if (cell.getMinesBeside() == 1) g.drawImage(oneImg, cell.getXpoints()[0] + IMAGE_DISPLACEMENT, cell.getYpoints()[0], IMG_WIDTH, IMG_HEIGHT, null);
                 else if (cell.getMinesBeside() == 2)
-                    g.drawImage(twoImg, cell.getXpoints()[0] + 12, cell.getYpoints()[0], imgWidth, imgHeight, null);
+                    g.drawImage(twoImg, cell.getXpoints()[0] + IMAGE_DISPLACEMENT, cell.getYpoints()[0], IMG_WIDTH, IMG_HEIGHT, null);
                 else if (cell.getMinesBeside() == 3)
-                    g.drawImage(threeImg, cell.getXpoints()[0] + 12, cell.getYpoints()[0], imgWidth, imgHeight, null);
+                    g.drawImage(threeImg, cell.getXpoints()[0] + IMAGE_DISPLACEMENT, cell.getYpoints()[0], IMG_WIDTH, IMG_HEIGHT, null);
                 else if (cell.getMinesBeside() == 4)
-                    g.drawImage(fourImg, cell.getXpoints()[0] + 12, cell.getYpoints()[0], imgWidth, imgHeight, null);
+                    g.drawImage(fourImg, cell.getXpoints()[0] + IMAGE_DISPLACEMENT, cell.getYpoints()[0], IMG_WIDTH, IMG_HEIGHT, null);
                 else if (cell.getMinesBeside() == 5)
-                    g.drawImage(fiveImg, cell.getXpoints()[0] + 12, cell.getYpoints()[0], imgWidth, imgHeight, null);
+                    g.drawImage(fiveImg, cell.getXpoints()[0] + IMAGE_DISPLACEMENT, cell.getYpoints()[0], IMG_WIDTH, IMG_HEIGHT, null);
                 else if (cell.getMinesBeside() == 6)
-                    g.drawImage(sixImg, cell.getXpoints()[0] + 12, cell.getYpoints()[0], imgWidth, imgHeight, null);
+                    g.drawImage(sixImg, cell.getXpoints()[0] + IMAGE_DISPLACEMENT, cell.getYpoints()[0], IMG_WIDTH, IMG_HEIGHT, null);
             }
 
-            if (cell.getMine() && cell.getIsOpen()) g.drawImage(mineImg, cell.getXpoints()[0] + 12, cell.getYpoints()[0], imgWidth, imgHeight, null);
+            if (cell.getMine() && cell.getIsOpen()) g.drawImage(mineImg, cell.getXpoints()[0] + IMAGE_DISPLACEMENT,
+                    cell.getYpoints()[0], IMG_WIDTH, IMG_HEIGHT, null);
 
-            if (cell.getFlag() && !cell.getIsOpen()) g.drawImage(flagImg, cell.getXpoints()[0] + 12, cell.getYpoints()[0], imgWidth, imgHeight, null);
+            if (cell.getFlag() && !cell.getIsOpen()) g.drawImage(flagImg, cell.getXpoints()[0] + IMAGE_DISPLACEMENT,
+                    cell.getYpoints()[0], IMG_WIDTH, IMG_HEIGHT, null);
             else if (cell.getQuestion() && !cell.getIsOpen())
-                g.drawImage(questionImg, cell.getXpoints()[0] + 12, cell.getYpoints()[0], imgWidth, imgHeight, null);
+                g.drawImage(questionImg, cell.getXpoints()[0] + IMAGE_DISPLACEMENT, cell.getYpoints()[0], IMG_WIDTH, IMG_HEIGHT, null);
 
         }
     }
