@@ -57,7 +57,8 @@ public class Settings extends JFrame {
 
         if (tmpCellsInHeight == 0 || tmpCellsInWidth == 0 || tmpNumberOfMines == 0)
             showErrorMessage();
-        else if(tmpNumberOfMines >= tmpCellsInHeight*tmpCellsInWidth -5 || tmpCellsInHeight*CELL_HEIGHT + TOOLBAR_HEIGHT + MAINFRAME_HORIZONTAL_BORDER_HEIGHT > screenHeight
+        else if(tmpNumberOfMines >= tmpCellsInHeight*tmpCellsInWidth -5
+                || tmpCellsInHeight*CELL_HEIGHT + TOOLBAR_HEIGHT + MAINFRAME_HORIZONTAL_BORDER_HEIGHT > screenHeight
                 || tmpCellsInWidth*CELL_WIDTH + MAINFRAAME_VERTICAL_BORDER_WIDTH > screenWidth)
             showInformationMessage();
         else {
