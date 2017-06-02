@@ -29,9 +29,9 @@ public class PlayingField extends JPanel {
     private final int IMG_WIDTH = 20;
     private final int IMG_HEIGHT = 20;
 
-    private final int IMAGE_DISPLACEMENT = 12;
-    private final int X_DISPLACEMENT = 20;
-    private final int Y_DISPLACEMENT = 35;
+    private static final int IMAGE_DISPLACEMENT = 12;
+    private static final int X_DISPLACEMENT = 20;
+    private static final int Y_DISPLACEMENT = 35;
 
 
     public PlayingField() {
@@ -75,25 +75,25 @@ public class PlayingField extends JPanel {
         Point startPoint = new Point(22, -18);            //точка начала заполнения строки
         Cell cell;
         int totalHeight = 1;          // высота поля в конкретный момент
-        while (totalHeight <= SettingsFrame.getCellsInHeight()) {
+        while (totalHeight <= SettingsFrame.getSettings().getCellsInHeight()) {
             if (totalHeight % 2 != 0) {                      //нечётный ярус
                 startPoint.x -= X_DISPLACEMENT;
                 startPoint.y += Y_DISPLACEMENT;
                 cell = new Cell(startPoint);
                 if (totalHeight != 1) {
-                    cell.setNortheasternBrother(result.get(result.size() - SettingsFrame.getCellsInWidth()));
-                    result.get(result.size() - 1 - SettingsFrame.getCellsInWidth() + 1).setSouthwesternBrother(cell);
+                    cell.setNortheasternBrother(result.get(result.size() - SettingsFrame.getSettings().getCellsInWidth()));
+                    result.get(result.size() - 1 - SettingsFrame.getSettings().getCellsInWidth() + 1).setSouthwesternBrother(cell);
                 }
                 result.add(cell);
-                for (int j = 1; j < SettingsFrame.getCellsInWidth(); j++) {
+                for (int j = 1; j < SettingsFrame.getSettings().getCellsInWidth(); j++) {
                     cell = cell.addEastBrother(cell);
                     result.get(result.size() - 1).setEastBrother(cell);
                     cell.setWestBrother(result.get(result.size() - 1));
                     if (totalHeight != 1) {
-                        cell.setNorthwesternBrother(result.get(result.size() - 1 - SettingsFrame.getCellsInWidth()));
-                        result.get(result.size() - 1 - SettingsFrame.getCellsInWidth()).setSoutheastBrother(cell);
-                        cell.setNortheasternBrother(result.get(result.size() - SettingsFrame.getCellsInWidth()));
-                        result.get(result.size() - SettingsFrame.getCellsInWidth()).setSouthwesternBrother(cell);
+                        cell.setNorthwesternBrother(result.get(result.size() - 1 - SettingsFrame.getSettings().getCellsInWidth()));
+                        result.get(result.size() - 1 - SettingsFrame.getSettings().getCellsInWidth()).setSoutheastBrother(cell);
+                        cell.setNortheasternBrother(result.get(result.size() - SettingsFrame.getSettings().getCellsInWidth()));
+                        result.get(result.size() - SettingsFrame.getSettings().getCellsInWidth()).setSouthwesternBrother(cell);
                     }
                     result.add(cell);
                 }
@@ -101,20 +101,20 @@ public class PlayingField extends JPanel {
                 startPoint.x += X_DISPLACEMENT;
                 startPoint.y += Y_DISPLACEMENT;
                 cell = new Cell(startPoint);
-                cell.setNorthwesternBrother(result.get(result.size() - SettingsFrame.getCellsInWidth()));
-                result.get(result.size() - SettingsFrame.getCellsInWidth()).setSoutheastBrother(cell);
-                cell.setNortheasternBrother(result.get(result.size() - SettingsFrame.getCellsInWidth() + 1));
-                result.get(result.size() - SettingsFrame.getCellsInWidth() + 1).setSouthwesternBrother(cell);
+                cell.setNorthwesternBrother(result.get(result.size() - SettingsFrame.getSettings().getCellsInWidth()));
+                result.get(result.size() - SettingsFrame.getSettings().getCellsInWidth()).setSoutheastBrother(cell);
+                cell.setNortheasternBrother(result.get(result.size() - SettingsFrame.getSettings().getCellsInWidth() + 1));
+                result.get(result.size() - SettingsFrame.getSettings().getCellsInWidth() + 1).setSouthwesternBrother(cell);
                 result.add(cell);
-                for (int j = 1; j < SettingsFrame.getCellsInWidth(); j++) {
+                for (int j = 1; j < SettingsFrame.getSettings().getCellsInWidth(); j++) {
                     cell = cell.addEastBrother(cell);
                     result.get(result.size() - 1).setEastBrother(cell);
                     cell.setWestBrother(result.get(result.size() - 1));
-                    cell.setNorthwesternBrother(result.get(result.size() - SettingsFrame.getCellsInWidth()));
-                    result.get(result.size() - SettingsFrame.getCellsInWidth()).setSoutheastBrother(cell);
-                    if (j != SettingsFrame.getCellsInWidth() - 1) {
-                        cell.setNortheasternBrother(result.get(result.size() - SettingsFrame.getCellsInWidth() + 1));
-                        result.get(result.size() - SettingsFrame.getCellsInWidth() + 1).setSouthwesternBrother(cell);
+                    cell.setNorthwesternBrother(result.get(result.size() - SettingsFrame.getSettings().getCellsInWidth()));
+                    result.get(result.size() - SettingsFrame.getSettings().getCellsInWidth()).setSoutheastBrother(cell);
+                    if (j != SettingsFrame.getSettings().getCellsInWidth() - 1) {
+                        cell.setNortheasternBrother(result.get(result.size() - SettingsFrame.getSettings().getCellsInWidth() + 1));
+                        result.get(result.size() - SettingsFrame.getSettings().getCellsInWidth() + 1).setSouthwesternBrother(cell);
                     }
                     result.add(cell);
                 }
@@ -127,9 +127,9 @@ public class PlayingField extends JPanel {
 
     private void mining() {         //минирование поля
         int totalMines = 0;
-        while (totalMines < SettingsFrame.getNumbOfMines()) {
+        while (totalMines < SettingsFrame.getSettings().getNumberOfMines()) {
             Random random = new Random();
-            int num = random.nextInt(SettingsFrame.getCellsInHeight() * SettingsFrame.getCellsInWidth() - 1);
+            int num = random.nextInt(SettingsFrame.getSettings().getCellsInHeight() * SettingsFrame.getSettings().getCellsInWidth() - 1);
             if (!cells.get(num).getMine() && !cells.get(num).getIsOpen()) {
                 cells.get(num).setMine(true);
                 totalMines++;
@@ -143,7 +143,7 @@ public class PlayingField extends JPanel {
             if (JOptionPane.OK_OPTION == 0) new Main().newGame();
         }
 
-        if (totalOpenCells == SettingsFrame.getMustBeOpen()) {
+        if (totalOpenCells == SettingsFrame.getSettings().getMustBeOpen()) {
             JOptionPane.showMessageDialog(null, "<html><H2>Вы победили</H2>", "Greeting",JOptionPane.PLAIN_MESSAGE);
             if (JOptionPane.OK_OPTION == 0) new Main().newGame();
         }
@@ -202,15 +202,15 @@ public class PlayingField extends JPanel {
            }
            if(newCell.getMinesBeside() == 0){
                for (Cell brother: newCell.getClosedBrothers()){
-                   queue.addFirst(brother);
+                   if (!brother.getFlag() && !brother.getQuestion()) queue.addFirst(brother);
                }
            }
        }
     }
 
     @Override
-    public Dimension getSize(){
-        return new Dimension(SettingsFrame.getCellsInWidth()*40,(SettingsFrame.getCellsInHeight())*35 + 15);
+    public Dimension getPreferredSize(){
+        return new Dimension(SettingsFrame.getSettings().getCellsInWidth()*40 + 25,(SettingsFrame.getSettings().getCellsInHeight())*35 + 20);
     }
 
 

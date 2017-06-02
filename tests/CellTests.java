@@ -3,17 +3,19 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.Assert;
 import java.awt.*;
+import java.util.ArrayList;
 
 
 public class CellTests {
-    Cell cell;
-    Cell brother;
-    Cell eastBrother;
-    Cell southeastBrother;
-    Cell southwesternBrother;
-    Cell westBrother;
-    Cell northwesternBrother;
-    Cell northeasternBrother;
+    private Cell cell;
+    private Cell brother;
+    private Cell eastBrother;
+    private Cell southeastBrother;
+    private Cell southwesternBrother;
+    private Cell westBrother;
+    private Cell northwesternBrother;
+    private Cell northeasternBrother;
+    private ArrayList<Cell> closedBrothers;
 
     @Before
     public void createCells(){
@@ -37,6 +39,14 @@ public class CellTests {
         cell.setNortheasternBrother(northeasternBrother);
 
         cell.setIsOpen(true);
+
+        closedBrothers = new ArrayList<>();
+        closedBrothers.add(eastBrother);
+        closedBrothers.add(southeastBrother);
+        closedBrothers.add(southwesternBrother);
+        closedBrothers.add(westBrother);
+        closedBrothers.add(northwesternBrother);
+        closedBrothers.add(northeasternBrother);
     }
 
     @Test
@@ -63,5 +73,20 @@ public class CellTests {
         Assert.assertEquals(new Color(121, 121, 121, 255), southeastBrother.getColor());
     }
 
+    @Test
+    public void getMineTest(){
+        Assert.assertFalse(cell.getMine());
+        Assert.assertTrue(eastBrother.getMine());
+        Assert.assertTrue(southeastBrother.getMine());
+        Assert.assertFalse(southwesternBrother.getMine());
+        Assert.assertFalse(westBrother.getMine());
+        Assert.assertFalse(northeasternBrother.getMine());
+        Assert.assertTrue(northwesternBrother.getMine());
+    }
+
+    @Test
+    public void getClosedBrothersTest(){
+        Assert.assertEquals(closedBrothers, cell.getClosedBrothers());
+    }
 
 }

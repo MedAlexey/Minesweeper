@@ -10,8 +10,8 @@ import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS;
 
 public class MainFrame extends JFrame {
 
-    private final int TOOLBAR_WIDTH = 17;
-    private final int MAINFRAAME_VERTICAL_BORDER_WIDTH = 43;
+    private final int SCROLLBAR_WIDTH = 17;
+    private final int MAINFRAAME_VERTICAL_BORDER_WIDTH = 30;
     private final int CELL_HEIGHT = 35;
     private final int CELL_WIDTH = 40;
     private final int TOOLBAR_HEIGHT = 30;
@@ -21,8 +21,8 @@ public class MainFrame extends JFrame {
         super("Minesweeper");
 
         JButton newPlay = new JButton("<html><i>Новая игра</i>");        //кнопка "новая игра игра"
-        newPlay.setBorder(new EmptyBorder(10,10,10,10));
-        newPlay.setMaximumSize(new Dimension(90,30));
+        newPlay.setBorder(new EmptyBorder(10, 10, 10, 10));
+        newPlay.setMaximumSize(new Dimension(90, 30));
         newPlay.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -31,8 +31,8 @@ public class MainFrame extends JFrame {
         });
 
         JButton settings = new JButton("<HTML><i>Настройки</i>");           //кнопка "настройки"
-        settings.setBorder(new EmptyBorder(10,10,10,10));
-        settings.setMaximumSize(new Dimension(90,30));
+        settings.setBorder(new EmptyBorder(10, 10, 10, 10));
+        settings.setMaximumSize(new Dimension(90, 30));
         settings.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -42,7 +42,7 @@ public class MainFrame extends JFrame {
         });
 
         JToolBar toolBar = new JToolBar();                                  //верхняя панелька
-        toolBar.setPreferredSize(new Dimension(50,30));
+        toolBar.setPreferredSize(new Dimension(50, 30));
         toolBar.add(newPlay);
         toolBar.add(settings);
         toolBar.setFloatable(false);                                       //изменение размера
@@ -53,15 +53,19 @@ public class MainFrame extends JFrame {
         field.setBorder(new BevelBorder(BevelBorder.LOWERED));
         JScrollPane scrollPane = new JScrollPane(field);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         getContentPane().add(scrollPane, BorderLayout.CENTER);
-        //getContentPane().add(field, BorderLayout.CENTER);
 
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setBackground(new Color(238,238,238,255));
-        //setResizable(false);
-        setSize(SettingsFrame.getCellsInWidth()*CELL_WIDTH + MAINFRAAME_VERTICAL_BORDER_WIDTH + TOOLBAR_WIDTH,
-                (SettingsFrame.getCellsInHeight())*CELL_HEIGHT + TOOLBAR_HEIGHT + MAINFRAME_HORIZONTAL_BORDER_HEIGHT);
+        setBackground(new Color(238, 238, 238, 255));
+        setResizable(false);
+        setSize(SettingsFrame.getSettings().getCellsInWidth() * CELL_WIDTH + MAINFRAAME_VERTICAL_BORDER_WIDTH + SCROLLBAR_WIDTH,
+                SettingsFrame.getSettings().getCellsInHeight() * CELL_HEIGHT > Toolkit.getDefaultToolkit().getScreenSize().height -
+                        Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration()).bottom ?
+                        Toolkit.getDefaultToolkit().getScreenSize().height -
+                                Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration()).bottom :
+                        SettingsFrame.getSettings().getCellsInHeight() * CELL_HEIGHT + TOOLBAR_HEIGHT + MAINFRAME_HORIZONTAL_BORDER_HEIGHT);
         setLocationRelativeTo(null);
     }
 

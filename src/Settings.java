@@ -4,70 +4,52 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class Settings extends JFrame {
+public class Settings {
 
-    private final int CELL_HEIGHT = 35;
-    private final int CELL_WIDTH = 40;
-    private final int TOOLBAR_HEIGHT = 30;
-    private final int MAINFRAME_HORIZONTAL_BORDER_HEIGHT = 70;
-    private final int MAINFRAAME_VERTICAL_BORDER_WIDTH = 43;
+    private static int cellsInWidth = 45;
+    private static int cellsInHeight = 20;
+    private static int numberOfMines = 300;
+    private static boolean closeFrame;
 
-    private int newCellsInWidth;
-    private int newCellsInHeight;
-    private int newNumberOfMines;
-    private int newMustBeOpen;
-    private boolean closeFrame = false;
-
-    private int screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
-    private int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height -
-            Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration()).bottom;
 
     public Settings() {
-        newCellsInHeight = SettingsFrame.getCellsInHeight();
-        newCellsInWidth = SettingsFrame.getCellsInWidth();
-        newNumberOfMines = SettingsFrame.getNumbOfMines();
-        newMustBeOpen = SettingsFrame.getMustBeOpen();
-
+        closeFrame = true;
+        int tmpCellsInWidth = setElement(SettingsFrame.getUsersCellsInWidth());
+        int tmpCellsInHeight = setElement(SettingsFrame.getUsersCellsInHeight());
+        int tmpNumberOfMines = setElement(SettingsFrame.getUsersNumbOfMines());
+        if(tmpCellsInHeight == 0 || tmpCellsInWidth == 0 || tmpNumberOfMines == 0){
+            showErrorMessage();
+            closeFrame = false;
+        }
+        else if(tmpNumberOfMines >= tmpCellsInHeight*tmpCellsInWidth -5 || tmpCellsInWidth < 5 || tmpCellsInHeight < 2){
+            closeFrame = false;
+            showInformationMessage();
+        }
+        else{
+            cellsInWidth = tmpCellsInWidth;
+            cellsInHeight = tmpCellsInHeight;
+            numberOfMines = tmpNumberOfMines;
+        }
     }
 
-    public int getCellsInWidth() {
-        return newCellsInWidth;
+    public static int getCellsInWidth() {
+        return cellsInWidth;
     }
 
-    public int getCellsInHeight() {
-        return newCellsInHeight;
+    public static int getCellsInHeight() {
+        return cellsInHeight;
     }
 
-    public int getNumbOfMines() {
-        return newNumberOfMines;
+    public static int getNumberOfMines() {
+        return numberOfMines;
     }
 
-    public boolean getCloseFrame(){
+    public static boolean getCloseFrame(){
         return closeFrame;
     }
 
-    public int getMustBeOpen() {
-        return newMustBeOpen;
-    }
-
-    public void okClicked(String cellsInWidth,String cellsInHeight,String numberOfMines){
-        int tmpCellsInWidth = setElement(cellsInWidth);
-        int tmpCellsInHeight = setElement(cellsInHeight);
-        int tmpNumberOfMines = setElement(numberOfMines);
-
-        if (tmpCellsInHeight == 0 || tmpCellsInWidth == 0 || tmpNumberOfMines == 0)
-            showErrorMessage();
-        else if(tmpNumberOfMines >= tmpCellsInHeight*tmpCellsInWidth -5
-                || tmpCellsInHeight*CELL_HEIGHT + TOOLBAR_HEIGHT + MAINFRAME_HORIZONTAL_BORDER_HEIGHT > screenHeight
-                || tmpCellsInWidth*CELL_WIDTH + MAINFRAAME_VERTICAL_BORDER_WIDTH > screenWidth)
-            showInformationMessage();
-        else {
-            newCellsInHeight = tmpCellsInHeight;
-            newCellsInWidth = tmpCellsInWidth;
-            newNumberOfMines = tmpNumberOfMines;
-            newMustBeOpen = newCellsInHeight * newCellsInWidth - newNumberOfMines;
-            closeFrame = true;
-        }
+    public static int getMustBeOpen() {
+        return cellsInHeight * cellsInWidth - numberOfMines;
     }
 
     private int textHandler(String line) {
@@ -82,11 +64,12 @@ public class Settings extends JFrame {
 
     private int setElement(String line) {
 
-        if (!line.equals("")) {
-            return textHandler(line);
-        } else {
-            return 0;
-        }
+        int result;
+        if(!line.equals("")){
+            result = textHandler(line);
+        } else result = 0;
+
+        return result;
     }
 
     private void showErrorMessage() {         //диалоговое окно с ошибкой

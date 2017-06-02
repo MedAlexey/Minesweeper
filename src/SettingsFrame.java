@@ -8,17 +8,10 @@ import java.awt.event.MouseListener;
 
 public class SettingsFrame  extends JFrame {
 
-    private static int cellsInWidth = 45;       //клеток в длину
-    private static int cellsInHeight = 20;      //клеток в ширину
-    private static int numbOfMines = 300;        //кол-во мин
-    private JTextField usersCellsInHeight;  //поле для ввода ячеек в высоту
-    private JTextField usersCellsInWidth;    //поле для ввода ячеек в ширину
-    private JTextField usersNumberOfMines;   //поля для ввода кол-ва мин
-    private static int mustBeOpen = cellsInHeight * cellsInWidth - numbOfMines;
-    private int screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
-    private int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height -
-            Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration()).bottom;
-    private Settings settings;
+    private static JTextField usersCellsInHeight;  //поле для ввода ячеек в высоту
+    private static JTextField usersCellsInWidth;    //поле для ввода ячеек в ширину
+    private static JTextField usersNumberOfMines;   //поля для ввода кол-ва мин
+    private static Settings settings;
 
     public SettingsFrame() {
         super("Settings");
@@ -26,21 +19,21 @@ public class SettingsFrame  extends JFrame {
 
         Box box1 = Box.createHorizontalBox();
         JLabel cellsInWidth = new JLabel("Ячеек в ширину:");
-        usersCellsInWidth = new JTextField("" +  SettingsFrame.getCellsInWidth(), 15);
+        usersCellsInWidth = new JTextField("" +  Settings.getCellsInWidth(), 15);
         box1.add(cellsInWidth);
         box1.add(Box.createHorizontalStrut(6));
         box1.add(usersCellsInWidth);
 // Настраиваем вторую горизонтальную панель
         Box box2 = Box.createHorizontalBox();
         JLabel cellsInHeight = new JLabel("Ячеек в высоту:");
-        usersCellsInHeight = new JTextField("" + SettingsFrame.getCellsInHeight(), 15);
+        usersCellsInHeight = new JTextField("" + Settings.getCellsInHeight(), 15);
         box2.add(cellsInHeight);
         box2.add(Box.createHorizontalStrut(6));
         box2.add(usersCellsInHeight);
 //Панель с вводом кол-ва мин
         Box box3 = Box.createHorizontalBox();
         JLabel numbOfMines = new JLabel("Колличество мин:");
-        usersNumberOfMines = new JTextField("" + SettingsFrame.getNumbOfMines(), 15);
+        usersNumberOfMines = new JTextField("" + Settings.getNumberOfMines(), 15);
         box3.add(numbOfMines);
         box3.add(Box.createHorizontalStrut(6));
         box3.add(usersNumberOfMines);
@@ -79,31 +72,24 @@ public class SettingsFrame  extends JFrame {
     }
 
 
-    public static int getCellsInWidth() {
-        return cellsInWidth;
+    public static Settings getSettings() { return settings;}
+
+    public static String getUsersCellsInWidth() {
+        return usersCellsInWidth.getText();
     }
 
-    public static int getCellsInHeight() {
-        return cellsInHeight;
+    public static String getUsersCellsInHeight() {
+        return usersCellsInHeight.getText();
     }
 
-    public static int getNumbOfMines() {
-        return numbOfMines;
+    public static String getUsersNumbOfMines() {
+        return usersNumberOfMines.getText();
     }
-
-    public static int getMustBeOpen() {
-        return mustBeOpen;
-    }
-
 
     class OkListener implements MouseListener {                 //листнер кнопки "ок"
 
         public void mouseClicked(MouseEvent event) {
-            settings.okClicked(usersCellsInWidth.getText(),usersCellsInHeight.getText(), usersNumberOfMines.getText());
-            cellsInHeight = settings.getCellsInHeight();
-            cellsInWidth = settings.getCellsInWidth();
-            numbOfMines = settings.getNumbOfMines();
-            mustBeOpen = settings.getMustBeOpen();
+            settings = new Settings();
             if (settings.getCloseFrame()){
                 new Main().newGame();
                 setVisible(false);
